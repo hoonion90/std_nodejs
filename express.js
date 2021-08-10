@@ -3,6 +3,7 @@ var url = require('url');
 var express = require('express');
 var app = express();
 
+app.use(express.static('.'));
 app.get('/', function (request, response) {
     var _url = request.url;
     var title = request.query.id;
@@ -12,6 +13,7 @@ app.get('/', function (request, response) {
     if(_url == '/favicon.ico'){
       return response.writeHead(404);
     }
+
     response.writeHead(200);
     fs.readFile(`data/${title}`, 'utf8', function(err, description){
       var template = `
@@ -37,6 +39,4 @@ app.get('/', function (request, response) {
     })
 });
 
-app.listen(3000, function () {
-  console.log('Example app listening on port 3000!');
-});
+app.listen(3000);
