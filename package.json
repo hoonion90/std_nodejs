@@ -1,0 +1,11 @@
+{
+  "name": "std_nodejs",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.mjs",
+  "scripts": {
+    "test": "node main.mjs"
+  },
+  "author": "hoonion90",
+  "license": "ISC"
+}
