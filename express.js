@@ -6,12 +6,33 @@ var app = express();
 app.use(express.static('.'));
 app.get('/', function (request, response) {
     var _url = request.url;
-    var title = request.query.id;
     var pathname = url.parse(_url,true).pathname;
 
     if(pathname === '/'){
-      fs.readFile(`data/${title}`, 'utf8', function(err, description){
-        var template = `
+      if(request.query.id === undefined){
+        var title = 'Welcome'
+        var description = 'Hello, node.js'
+        var template = makeTemplate(title, description);
+        response.writeHead(200);
+        response.end(template);
+      } else {
+        fs.readFile(`data/${request.query.id}`, 'utf8', function(err, description){
+          var title = request.query.id;
+          var template = makeTemplate(title, description);
+          response.writeHead(200);
+          response.end(template);
+        });
+      }
+    } else {
+      response.writeHead(404);
+      response.end('PAGE NOT FOUND !');
+    }
+});
+
+app.listen(3000);
+
+function makeTemplate(title, description){
+  var template = `
         <!doctype html>
         <html>
         <head>
@@ -30,13 +51,5 @@ app.get('/', function (request, response) {
         </body>
         </html>
         `;
-        response.writeHead(200);
-        response.end(template);
-      });
-    } else {
-      response.writeHead(404);
-      response.end('PAGE NOT FOUND !');
-    }
-});
-
-app.listen(3000);
+  return template;      
+}
