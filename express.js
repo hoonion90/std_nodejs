@@ -12,13 +12,13 @@ app.get('/', function (request, response) {
       if(request.query.id === undefined){
         var title = 'Welcome'
         var description = 'Hello, node.js'
-        var template = makeTemplate(title, description);
+        let template = makeTemplate(title, description);
         response.writeHead(200);
         response.end(template);
       } else {
         fs.readFile(`data/${request.query.id}`, 'utf8', function(err, description){
           var title = request.query.id;
-          var template = makeTemplate(title, description);
+          let template = makeTemplate(title, description);
           response.writeHead(200);
           response.end(template);
         });
@@ -32,24 +32,27 @@ app.get('/', function (request, response) {
 app.listen(3000);
 
 function makeTemplate(title, description){
+  let filelist = fs.readdirSync('./data');
+  let list = "<ul>";
+  for (var i in filelist){
+    list += `<li><a href='/?id=${filelist[i]}'>${filelist[i]}</a></li>`;
+  }
+  list += "</ul>";
+
   var template = `
-        <!doctype html>
-        <html>
-        <head>
-          <title>WEB1 - ${title}</title>
-          <meta charset="utf-8">
-        </head>
-        <body>
-          <h1><a href="/">WEB</a></h1>
-          <ul>
-            <li><a href="/?id=HTML">HTML</a></li>
-            <li><a href="/?id=CSS">CSS</a></li>
-            <li><a href="/?id=JavaScript">JavaScript</a></li>
-          </ul>
-          <h2>${title}</h2>
-          <p>${description}</p>
-        </body>
-        </html>
-        `;
-  return template;      
+      <!doctype html>
+      <html>
+      <head>
+        <title>WEB1 - ${title}</title>
+        <meta charset="utf-8">
+      </head>
+      <body>
+        <h1><a href="/">WEB</a></h1>
+          ${list}
+        <h2>${title}</h2>
+        <p>${description}</p>
+      </body>
+      </html>
+      `;
+  return template; 
 }
